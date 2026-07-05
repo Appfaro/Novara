@@ -31,7 +31,7 @@ export default function Banner() {
         </div>
 
         <div className="pointer-events-none hidden flex-shrink-0 opacity-90 md:block">
-          <Logo size={280} light />
+          <Logo size={300} light />
         </div>
       </div>
     </section>
