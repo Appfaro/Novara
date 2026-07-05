@@ -4,7 +4,7 @@ import { useRef, useState } from 'react';
 import Image from 'next/image';
 import { Star, Trash2, Upload } from 'lucide-react';
 import { ProductImage } from '@/types';
-import { uploadProductImages, deleteProductImage, reorderImages } from '@/lib/storageHelpers';
+import { uploadProductImages, deleteProductImage } from '@/lib/storageHelpers';
 import toast from 'react-hot-toast';
 
 interface Props {
@@ -13,16 +13,13 @@ interface Props {
   onChange: (images: ProductImage[]) => void;
 }
 
-/**
- * Permite arrastrar imágenes desde el explorador de archivos, las comprime
- * automáticamente, y deja reordenarlas arrastrándolas entre sí (drag & drop)
- * o marcarlas como imagen principal, todo sin tocar código.
- */
 export default function ImageUploader({ sku, images, onChange }: Props) {
   const [dragOver, setDragOver] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const dragIndex = useRef<number | null>(null);
+  const dragPath = useRef<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const sorted = [...images].sort((a, b) => a.order - b.order);
 
   async function handleFiles(files: FileList | null) {
     if (!files || files.length === 0) return;
@@ -38,24 +35,41 @@ export default function ImageUploader({ sku, images, onChange }: Props) {
     }
   }
 
-  async function handleDelete(index: number) {
-    const img = images[index];
-    await deleteProductImage(img.path);
-    onChange(images.filter((_, i) => i !== index).map((im, i) => ({ ...im, order: i })));
+  function handleDelete(path: string) {
+    const remaining = images
+      .filter((img) => img.path !== path)
+      .map((img, i) => ({ ...img, order: i }));
+    onChange(remaining);
+    toast.success('Imagen eliminada');
+
+    deleteProductImage(path).catch(() => {
+      /* el archivo ya se quitó de la lista igualmente */
+    });
   }
 
-  function handleSetMain(index: number) {
-    onChange(reorderImages(images, index, 0));
+  function handleSetMain(path: string) {
+    const fromIndex = images.findIndex((img) => img.path === path);
+    if (fromIndex === -1) return;
+    const reordered = [...images];
+    const [moved] = reordered.splice(fromIndex, 1);
+    reordered.unshift(moved);
+    onChange(reordered.map((img, i) => ({ ...img, order: i })));
   }
 
-  function handleDragStart(index: number) {
-    dragIndex.current = index;
+  function handleDragStart(path: string) {
+    dragPath.current = path;
   }
 
-  function handleDropReorder(index: number) {
-    if (dragIndex.current === null || dragIndex.current === index) return;
-    onChange(reorderImages(images, dragIndex.current, index));
-    dragIndex.current = null;
+  function handleDropReorder(targetPath: string) {
+    if (!dragPath.current || dragPath.current === targetPath) return;
+    const fromIndex = images.findIndex((img) => img.path === dragPath.current);
+    const toIndex = images.findIndex((img) => img.path === targetPath);
+    if (fromIndex === -1 || toIndex === -1) return;
+    const reordered = [...images];
+    const [moved] = reordered.splice(fromIndex, 1);
+    reordered.splice(toIndex, 0, moved);
+    onChange(reordered.map((img, i) => ({ ...img, order: i })));
+    dragPath.current = null;
   }
 
   return (
@@ -91,15 +105,15 @@ export default function ImageUploader({ sku, images, onChange }: Props) {
 
       {uploading && <p className="mt-2 text-sm text-brand-gray-500">Subiendo imágenes…</p>}
 
-      {images.length > 0 && (
+      {sorted.length > 0 && (
         <div className="mt-4 grid grid-cols-3 gap-3 sm:grid-cols-4">
-          {[...images].sort((a, b) => a.order - b.order).map((img, index) => (
+          {sorted.map((img, index) => (
             <div
               key={img.path}
               draggable
-              onDragStart={() => handleDragStart(index)}
+              onDragStart={() => handleDragStart(img.path)}
               onDragOver={(e) => e.preventDefault()}
-              onDrop={() => handleDropReorder(index)}
+              onDrop={() => handleDropReorder(img.path)}
               className="group relative aspect-square cursor-move overflow-hidden border border-brand-gray-200 dark:border-brand-gray-700"
             >
               <Image src={img.url} alt="" fill className="object-cover" />
@@ -111,7 +125,8 @@ export default function ImageUploader({ sku, images, onChange }: Props) {
               <div className="absolute inset-0 flex items-center justify-center gap-2 bg-black/50 opacity-0 transition-opacity group-hover:opacity-100">
                 {index !== 0 && (
                   <button
-                    onClick={() => handleSetMain(index)}
+                    type="button"
+                    onClick={() => handleSetMain(img.path)}
                     title="Marcar como principal"
                     className="rounded-full bg-white p-1.5"
                   >
@@ -119,7 +134,8 @@ export default function ImageUploader({ sku, images, onChange }: Props) {
                   </button>
                 )}
                 <button
-                  onClick={() => handleDelete(index)}
+                  type="button"
+                  onClick={() => handleDelete(img.path)}
                   title="Eliminar imagen"
                   className="rounded-full bg-white p-1.5 text-brand-red"
                 >
