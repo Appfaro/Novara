@@ -1,0 +1,38 @@
+rules_version = '2';
+
+// Reglas de seguridad de Firestore.
+// - Cualquier visitante puede LEER productos y categorías (para que la tienda funcione).
+// - SOLO un usuario autenticado (el administrador que ha iniciado sesión con
+//   Firebase Authentication) puede CREAR, EDITAR o BORRAR productos/categorías.
+// - Cualquiera puede escribir en "newsletter" (suscripción) pero no leer esa colección.
+// - Cualquiera puede crear un registro en "ratings"/actualizar rating agregado del producto
+//   a través de la propia app; si se necesita más control, mover esto a una Cloud Function.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAdmin() {
+      return request.auth != null;
+    }
+
+    match /products/{productId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /categories/{categoryId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /coupons/{couponId} {
+      allow read: if true; // necesario para validar el código en el carrito
+      allow write: if isAdmin();
+    }
+
+    match /newsletter/{docId} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+  }
+}

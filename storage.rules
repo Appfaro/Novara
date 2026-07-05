@@ -1,0 +1,15 @@
+rules_version = '2';
+
+// Reglas de seguridad de Firebase Storage.
+// - Cualquiera puede VER las imágenes de los productos (necesario para que
+//   se muestren en la tienda).
+// - Solo el administrador autenticado puede SUBIR o BORRAR imágenes.
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /products/{allPaths=**} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+  }
+}
