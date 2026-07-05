@@ -4,8 +4,8 @@ import { db } from '@/lib/firebase';
 import { Product } from '@/types';
 import ProductPageClient from '@/components/ProductPageClient';
 
-// Genera metadatos (título, descripción, Open Graph) dinámicos por producto,
-// leyendo el documento directamente de Firestore en el servidor.
+export const dynamic = 'force-dynamic';
+
 export async function generateMetadata({
   params,
 }: {
