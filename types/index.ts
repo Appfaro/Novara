@@ -2,7 +2,7 @@
 
 export interface ProductImage {
   url: string;
-  path: string; // ruta en Firebase Storage (para poder borrarla)
+  path: string;
   order: number;
 }
 
@@ -15,19 +15,18 @@ export interface Product {
   id: string;
   name: string;
   price: number;
-  offerPrice?: number | null; // si existe, es el precio en oferta
+  offerPrice?: number | null;
   description: string;
   images: ProductImage[];
   sizes: SizeStock[];
   sku: string;
   categoryId: string;
-  // Pares clave-valor con los atributos definidos por la categoría del producto
-  // (ej. { "País": "Brasil", "Año del Mundial": "2002" } o { "Material": "Algodón" }).
   attributes: Record<string, string>;
   visible: boolean;
+  order: number;
   rating?: number;
   ratingCount?: number;
-  createdAt: number; // timestamp epoch ms
+  createdAt: number;
   updatedAt: number;
 }
 
@@ -37,8 +36,6 @@ export interface Category {
   slug: string;
   order: number;
   visible: boolean;
-  // Nombres de los campos personalizados que tendrán los productos de esta
-  // categoría (ej. ["País", "Año del Mundial"] o ["Material", "Talla"]).
   attributes: string[];
 }
 
@@ -53,6 +50,6 @@ export interface CartItem {
 
 export interface Coupon {
   code: string;
-  percentage: number; // 0-100
+  percentage: number;
   active: boolean;
 }
