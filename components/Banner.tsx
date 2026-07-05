@@ -5,15 +5,15 @@ import Logo from '@/components/Logo';
 export default function Banner() {
   return (
     <section className="relative overflow-hidden bg-brand-black text-white">
-      <div className="absolute inset-y-0 right-0 hidden w-[55%] md:block">
+      <div className="absolute inset-y-0 right-0 hidden w-[60%] md:block">
         <Image
           src="/images/hero-runner.png"
           alt=""
           fill
           priority
-          className="object-cover object-left"
+          className="object-contain object-right"
         />
-        <div className="absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-brand-black to-transparent" />
+        <div className="absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r from-brand-black to-transparent" />
       </div>
 
       <div className="relative mx-auto flex max-w-6xl items-center px-6 py-20 sm:py-28">
