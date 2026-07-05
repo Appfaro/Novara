@@ -5,10 +5,15 @@ export default function Banner() {
   return (
     <section className="relative overflow-hidden bg-brand-black text-white">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(201,162,74,0.25),transparent_45%)]" />
-      <div className="relative mx-auto flex max-w-2xl flex-col items-start gap-5 px-6 py-24 sm:py-32">
+
+      <div className="pointer-events-none absolute -right-8 top-1/2 hidden -translate-y-1/2 opacity-90 md:block lg:-right-4">
+        <Logo size={340} light />
+      </div>
+
+      <div className="relative mx-auto flex max-w-xl flex-col items-start gap-5 px-6 py-24 sm:py-32">
         <div className="flex items-center gap-3">
-          <Logo size={72} light />
-          <h1 className="font-display text-5xl uppercase leading-[0.95] sm:text-6xl md:text-7xl animate-fadeUp">
+          <Logo size={56} light />
+          <h1 className="font-display text-5xl uppercase leading-[0.95] sm:text-6xl animate-fadeUp">
             Novara
           </h1>
         </div>
