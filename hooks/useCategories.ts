@@ -26,7 +26,10 @@ export function useCategories() {
     const unsub = onSnapshot(
       q,
       (snap) => {
-        const data = snap.docs.map((d) => ({ id: d.id, ...d.data() }) as Category);
+        const data = snap.docs.map((d) => {
+          const raw = d.data() as Omit<Category, 'id'>;
+          return { id: d.id, ...raw, attributes: raw.attributes || [] } as Category;
+        });
         setCategories(data);
         setLoading(false);
       },
@@ -44,6 +47,7 @@ export async function createCategory(name: string, order: number) {
     slug: slugify(name),
     order,
     visible: true,
+    attributes: [],
   });
 }
 
@@ -57,6 +61,10 @@ export async function reorderCategory(id: string, order: number) {
 
 export async function toggleCategoryVisibility(id: string, visible: boolean) {
   return updateDoc(doc(db, COLLECTION, id), { visible });
+}
+
+export async function setCategoryAttributes(id: string, attributes: string[]) {
+  return updateDoc(doc(db, COLLECTION, id), { attributes });
 }
 
 export async function deleteCategory(id: string) {

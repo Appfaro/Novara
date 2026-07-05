@@ -73,7 +73,7 @@ export default function ImageUploader({ sku, images, onChange }: Props) {
         }}
         onClick={() => inputRef.current?.click()}
         className={`flex cursor-pointer flex-col items-center justify-center gap-2 border-2 border-dashed p-8 text-center text-sm ${
-          dragOver ? 'border-brand-red bg-brand-red/5' : 'border-brand-gray-300 dark:border-brand-gray-600'
+          dragOver ? 'border-brand-gold bg-brand-gold/5' : 'border-brand-gray-300 dark:border-brand-gray-600'
         }`}
       >
         <Upload size={24} />
@@ -104,7 +104,7 @@ export default function ImageUploader({ sku, images, onChange }: Props) {
             >
               <Image src={img.url} alt="" fill className="object-cover" />
               {index === 0 && (
-                <span className="absolute left-1 top-1 bg-brand-red px-1.5 py-0.5 text-[10px] font-bold uppercase text-white">
+                <span className="absolute left-1 top-1 bg-brand-gold px-1.5 py-0.5 text-[10px] font-bold uppercase text-brand-black">
                   Principal
                 </span>
               )}

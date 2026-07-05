@@ -18,7 +18,7 @@ export default function CategoryTabs({ activeSlug }: { activeSlug?: string }) {
         className={`whitespace-nowrap px-4 py-2 text-sm font-bold uppercase tracking-wide transition-colors ${
           !activeSlug || activeSlug === 'todas'
             ? 'bg-brand-black text-white dark:bg-white dark:text-brand-black'
-            : 'text-brand-gray-500 hover:text-brand-red'
+            : 'text-brand-gray-500 hover:text-brand-gold'
         }`}
       >
         Todas
@@ -30,7 +30,7 @@ export default function CategoryTabs({ activeSlug }: { activeSlug?: string }) {
           className={`whitespace-nowrap px-4 py-2 text-sm font-bold uppercase tracking-wide transition-colors ${
             activeSlug === cat.slug
               ? 'bg-brand-black text-white dark:bg-white dark:text-brand-black'
-              : 'text-brand-gray-500 hover:text-brand-red'
+              : 'text-brand-gray-500 hover:text-brand-gold'
           }`}
         >
           {cat.name}

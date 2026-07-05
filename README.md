@@ -1,14 +1,16 @@
-# MundialShirts 🏆
+# Novara 🏔️
 
-Tienda online de camisetas de Mundiales de Fútbol. Construida con **Next.js 14
-(App Router) + Tailwind CSS + Firebase (Auth, Firestore, Storage)**.
+Tienda online multi-producto (ropa, calzado y accesorios deportivos).
+Construida con **Next.js 14 (App Router) + Tailwind CSS + Firebase (Auth,
+Firestore, Storage)**. Marca: negro / blanco / dorado, con un pequeño acento
+en rojo — "Diseño. Rendimiento. Estilo de vida."
 
 ---
 
 ## 1. Estructura del proyecto
 
 ```
-mundial-shirts/
+novara/
 ├── app/                     # Rutas (App Router de Next.js)
 │   ├── page.tsx             # Página principal
 │   ├── categoria/[slug]/    # Listado por categoría + filtros
@@ -92,10 +94,17 @@ Abre [http://localhost:3000](http://localhost:3000).
    - **Categorías** → crea, renombra, oculta/muestra, reordena arrastrando
      y elimina categorías. Cada categoría nueva aparece automáticamente como
      una pestaña nueva en la página principal.
-   - **Productos** → "Nuevo producto" para crear una camiseta: nombre, país,
-     año, precio, precio de oferta, descripción, tallas y stock por talla,
-     categoría y imágenes (arrastra y suelta, se comprimen solas, puedes
-     marcar la imagen principal o borrarlas). El SKU se genera solo.
+     Además, en cada categoría puedes **añadir "campos" personalizados**
+     (ej. la categoría "Camisetas" puede tener los campos "País" y "Año del
+     Mundial"; una categoría "Calcetines" puede tener "Material" y "Talla").
+     El formulario de crear producto mostrará automáticamente esos campos
+     según la categoría que elijas — así la tienda no está limitada a
+     camisetas de Mundiales, puedes vender cualquier tipo de producto.
+   - **Productos** → "Nuevo producto" para crear un artículo: nombre, precio,
+     precio de oferta, descripción, tallas y stock por talla, categoría (que
+     determina qué campos personalizados rellenar) e imágenes (arrastra y
+     suelta, se comprimen solas, puedes marcar la imagen principal o
+     borrarlas). El SKU se genera solo.
    - Edita o borra cualquier producto con los iconos de la tabla.
 
 Todo se guarda en tiempo real en Firestore/Storage: los cambios se reflejan

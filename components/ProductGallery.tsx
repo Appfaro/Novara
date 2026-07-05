@@ -31,7 +31,7 @@ export default function ProductGallery({ images, name }: { images: ProductImage[
               key={img.path}
               onClick={() => setActive(i)}
               className={`relative h-16 w-16 flex-shrink-0 overflow-hidden border-2 ${
-                active === i ? 'border-brand-red' : 'border-transparent'
+                active === i ? 'border-brand-gold' : 'border-transparent'
               }`}
             >
               <Image src={img.url} alt={`${name} ${i + 1}`} fill className="object-cover" />

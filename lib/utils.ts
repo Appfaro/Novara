@@ -27,11 +27,11 @@ export function finalPrice(product: Product): number {
     : product.price;
 }
 
-/** Genera un SKU legible automáticamente: PAIS-AÑO-XXXX */
-export function generateSku(country: string, year: number): string {
-  const prefix = country.slice(0, 3).toUpperCase();
+/** Genera un SKU legible automáticamente: PREFIJO-XXXX (a partir del nombre de la categoría). */
+export function generateSku(categoryName: string): string {
+  const prefix = (categoryName || 'GEN').replace(/[^a-zA-Z0-9]/g, '').slice(0, 4).toUpperCase() || 'GEN';
   const random = Math.floor(1000 + Math.random() * 9000);
-  return `${prefix}-${year}-${random}`;
+  return `${prefix}-${random}`;
 }
 
 export function totalStock(product: Product): number {

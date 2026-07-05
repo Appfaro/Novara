@@ -60,8 +60,8 @@ export default function CartPage() {
         {items.length === 0 ? (
           <div className="text-center text-brand-gray-500">
             <p>Tu carrito está vacío.</p>
-            <Link href="/categoria/todas" className="mt-4 inline-block text-brand-red underline">
-              Ver camisetas
+            <Link href="/categoria/todas" className="mt-4 inline-block text-brand-gold underline">
+              Ver productos
             </Link>
           </div>
         ) : (
@@ -130,7 +130,7 @@ export default function CartPage() {
                 <span>{formatPrice(subtotal)}</span>
               </div>
               {discount > 0 && (
-                <div className="flex justify-between text-brand-red">
+                <div className="flex justify-between text-brand-gold">
                   <span>Descuento {coupon?.code}</span>
                   <span>-{formatPrice(discount)}</span>
                 </div>
@@ -145,7 +145,7 @@ export default function CartPage() {
               href={`https://wa.me/${whatsappNumber}?text=${checkoutMessage}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-6 block w-full bg-brand-red py-4 text-center text-sm font-bold uppercase tracking-widest2 text-white hover:bg-brand-redDark"
+              className="mt-6 block w-full bg-brand-gold py-4 text-center text-sm font-bold uppercase tracking-widest2 text-brand-black hover:bg-brand-goldDark"
             >
               Finalizar compra
             </a>

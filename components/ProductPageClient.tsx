@@ -10,6 +10,7 @@ import ShareButtons from '@/components/ShareButtons';
 import RelatedProducts from '@/components/RelatedProducts';
 import RatingForm, { StarsDisplay } from '@/components/RatingStars';
 import { useProducts } from '@/hooks/useProducts';
+import { useCategories } from '@/hooks/useCategories';
 import { useCart } from '@/context/CartContext';
 import { finalPrice, formatPrice, totalStock } from '@/lib/utils';
 import { SizeStock } from '@/types';
@@ -17,6 +18,7 @@ import toast from 'react-hot-toast';
 
 export default function ProductPageClient({ params }: { params: { id: string } }) {
   const { products, loading } = useProducts();
+  const { categories } = useCategories();
   const { addItem } = useCart();
   const router = useRouter();
   const [size, setSize] = useState<SizeStock['size'] | null>(null);
@@ -38,6 +40,8 @@ export default function ProductPageClient({ params }: { params: { id: string } }
 
   const price = finalPrice(product);
   const stockLeft = size ? product.sizes.find((s) => s.size === size)?.stock ?? 0 : 0;
+  const categoryName = categories.find((c) => c.id === product.categoryId)?.name;
+  const attributeEntries = Object.entries(product.attributes || {}).filter(([, v]) => v);
 
   function handleAdd(buyNow: boolean) {
     if (!size) {
@@ -67,9 +71,9 @@ export default function ProductPageClient({ params }: { params: { id: string } }
         <ProductGallery images={product.images} name={product.name} />
 
         <div>
-          <p className="text-sm uppercase tracking-wide text-brand-gray-500">
-            {product.country} · Mundial {product.worldCupYear}
-          </p>
+          {categoryName && (
+            <p className="text-sm uppercase tracking-wide text-brand-gray-500">{categoryName}</p>
+          )}
           <h1 className="mt-1 font-display text-3xl uppercase">{product.name}</h1>
 
           <div className="mt-2">
@@ -86,6 +90,17 @@ export default function ProductPageClient({ params }: { params: { id: string } }
           </div>
 
           <p className="mt-4 text-brand-gray-600 dark:text-brand-gray-300">{product.description}</p>
+
+          {attributeEntries.length > 0 && (
+            <dl className="mt-4 grid grid-cols-2 gap-2 border-t border-brand-gray-200 pt-4 text-sm dark:border-brand-gray-700">
+              {attributeEntries.map(([key, value]) => (
+                <div key={key}>
+                  <dt className="text-xs uppercase text-brand-gray-400">{key}</dt>
+                  <dd className="font-semibold">{value}</dd>
+                </div>
+              ))}
+            </dl>
+          )}
 
           <div className="mt-6">
             <p className="mb-2 text-sm font-bold uppercase">Talla</p>
@@ -131,7 +146,7 @@ export default function ProductPageClient({ params }: { params: { id: string } }
           <button
             onClick={() => handleAdd(true)}
             disabled={totalStock(product) === 0}
-            className="mt-3 w-full bg-brand-red py-3 text-sm font-bold uppercase tracking-widest2 text-white transition-transform hover:scale-[1.02] hover:bg-brand-redDark disabled:opacity-40"
+            className="mt-3 w-full bg-brand-gold py-3 text-sm font-bold uppercase tracking-widest2 text-brand-black transition-transform hover:scale-[1.02] hover:bg-brand-goldDark disabled:opacity-40"
           >
             Comprar ahora
           </button>

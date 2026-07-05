@@ -7,15 +7,20 @@ import { Product } from '@/types';
 import { finalPrice, formatPrice, totalStock } from '@/lib/utils';
 import { useCart } from '@/context/CartContext';
 import { useFavorites } from '@/hooks/useFavorites';
+import { useCategories } from '@/hooks/useCategories';
 import toast from 'react-hot-toast';
 
 export default function ProductCard({ product }: { product: Product }) {
   const { addItem } = useCart();
   const { isFavorite, toggleFavorite } = useFavorites();
+  const { categories } = useCategories();
   const image = product.images.sort((a, b) => a.order - b.order)[0];
   const outOfStock = totalStock(product) === 0;
   const price = finalPrice(product);
   const hasOffer = price < product.price;
+  const categoryName = categories.find((c) => c.id === product.categoryId)?.name;
+  const attributeValues = Object.values(product.attributes || {}).filter(Boolean);
+  const subtitle = attributeValues.length > 0 ? attributeValues.slice(0, 2).join(' · ') : categoryName;
 
   function quickAdd(e: React.MouseEvent) {
     e.preventDefault();
@@ -65,7 +70,7 @@ export default function ProductCard({ product }: { product: Product }) {
           />
         )}
         {hasOffer && (
-          <span className="absolute left-3 top-3 bg-brand-red px-2 py-1 text-xs font-bold uppercase text-white">
+          <span className="absolute left-3 top-3 bg-brand-gold px-2 py-1 text-xs font-bold uppercase text-brand-black">
             Oferta
           </span>
         )}
@@ -77,9 +82,9 @@ export default function ProductCard({ product }: { product: Product }) {
       </div>
 
       <div className="p-4">
-        <p className="text-xs uppercase tracking-wide text-brand-gray-500">
-          {product.country} · Mundial {product.worldCupYear}
-        </p>
+        {subtitle && (
+          <p className="text-xs uppercase tracking-wide text-brand-gray-500">{subtitle}</p>
+        )}
         <h3 className="mt-1 line-clamp-2 font-semibold">{product.name}</h3>
         <div className="mt-2 flex items-center justify-between">
           <div className="flex items-baseline gap-2">

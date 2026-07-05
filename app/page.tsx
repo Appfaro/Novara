@@ -21,7 +21,7 @@ export default function HomePage() {
       <section className="mx-auto max-w-7xl px-4 pt-10 sm:px-6">
         <h2 className="font-display text-2xl uppercase sm:text-3xl">Destacadas</h2>
         <p className="mt-1 text-brand-gray-500">
-          Las camisetas más buscadas de la temporada.
+          Los productos más buscados de la temporada.
         </p>
       </section>
 

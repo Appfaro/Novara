@@ -2,7 +2,12 @@ import { MetadataRoute } from 'next';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://mundial-shirts.vercel.app';
+// Genera el sitemap en el momento en que alguien lo visita (no durante el
+// "build" de Vercel), porque conectar con Firestore en tiempo de compilación
+// no es fiable y puede hacer fallar el despliegue.
+export const dynamic = 'force-dynamic';
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://novara.vercel.app';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes: MetadataRoute.Sitemap = [

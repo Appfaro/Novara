@@ -23,22 +23,20 @@ export default function CategoryPage({ params }: { params: { slug: string } }) {
     return products.filter((p) => p.categoryId === category?.id);
   }, [products, params.slug, category]);
 
-  const countries = useMemo(
-    () => Array.from(new Set(scoped.map((p) => p.country))).sort(),
-    [scoped]
-  );
-  const years = useMemo(
-    () => Array.from(new Set(scoped.map((p) => p.worldCupYear))).sort((a, b) => b - a),
-    [scoped]
-  );
+  // Los filtros de atributos (ej. "País", "Material"...) solo tienen sentido
+  // cuando se está viendo una categoría concreta, ya que "Todas" mezcla campos distintos.
+  const availableAttributes = params.slug === 'todas' ? [] : category?.attributes || [];
 
   const filtered = scoped.filter((p) => {
     const price = finalPrice(p);
     if (price < filters.minPrice || price > filters.maxPrice) return false;
-    if (filters.country && p.country !== filters.country) return false;
-    if (filters.year && String(p.worldCupYear) !== filters.year) return false;
     if (filters.size && !p.sizes.some((s) => s.size === filters.size && s.stock > 0)) return false;
     if (filters.onlyAvailable && totalStock(p) === 0) return false;
+    for (const [attr, value] of Object.entries(filters.attributes)) {
+      if (!value) continue;
+      const productValue = (p.attributes || {})[attr] || '';
+      if (!productValue.toLowerCase().includes(value.toLowerCase())) return false;
+    }
     return true;
   });
 
@@ -47,7 +45,7 @@ export default function CategoryPage({ params }: { params: { slug: string } }) {
       <Navbar />
       <CategoryTabs activeSlug={params.slug} />
       <div className="mx-auto flex max-w-7xl flex-col sm:flex-row">
-        <Filters filters={filters} onChange={setFilters} countries={countries} years={years} />
+        <Filters filters={filters} onChange={setFilters} availableAttributes={availableAttributes} />
         <div className="flex-1">
           <ProductGrid products={filtered} loading={loading} />
         </div>

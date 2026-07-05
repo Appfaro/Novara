@@ -14,8 +14,6 @@ export interface SizeStock {
 export interface Product {
   id: string;
   name: string;
-  country: string;
-  worldCupYear: number;
   price: number;
   offerPrice?: number | null; // si existe, es el precio en oferta
   description: string;
@@ -23,6 +21,9 @@ export interface Product {
   sizes: SizeStock[];
   sku: string;
   categoryId: string;
+  // Pares clave-valor con los atributos definidos por la categoría del producto
+  // (ej. { "País": "Brasil", "Año del Mundial": "2002" } o { "Material": "Algodón" }).
+  attributes: Record<string, string>;
   visible: boolean;
   rating?: number;
   ratingCount?: number;
@@ -36,6 +37,9 @@ export interface Category {
   slug: string;
   order: number;
   visible: boolean;
+  // Nombres de los campos personalizados que tendrán los productos de esta
+  // categoría (ej. ["País", "Año del Mundial"] o ["Material", "Talla"]).
+  attributes: string[];
 }
 
 export interface CartItem {

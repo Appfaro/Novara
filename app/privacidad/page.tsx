@@ -12,7 +12,7 @@ export default function PrivacyPage() {
           Política de privacidad
         </h1>
         <p className="mb-4">
-          En MundialShirts respetamos tu privacidad. Esta página resume qué
+          En Novara respetamos tu privacidad. Esta página resume qué
           datos recogemos y para qué los usamos. Sustituye este texto por el
           redactado por tu asesor legal antes de publicar la tienda.
         </p>

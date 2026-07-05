@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { Search, ShoppingBag, Heart, Menu, X, Moon, Sun } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import SearchBar from '@/components/SearchBar';
+import Logo from '@/components/Logo';
 
 export default function Navbar() {
   const { itemCount } = useCart();
@@ -37,14 +38,15 @@ export default function Navbar() {
           {menuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
 
-        <Link href="/" className="font-display text-2xl tracking-widest2 uppercase">
-          Mundial<span className="text-brand-red">Shirts</span>
+        <Link href="/" className="flex items-center gap-2 font-display text-2xl tracking-widest2 uppercase">
+          <Logo size={26} />
+          Novara
         </Link>
 
         <nav className="hidden md:flex items-center gap-6 text-sm font-semibold uppercase tracking-wide">
-          <Link href="/" className="hover:text-brand-red transition-colors">Inicio</Link>
-          <Link href="/categoria/todas" className="hover:text-brand-red transition-colors">Camisetas</Link>
-          <Link href="/favoritos" className="hover:text-brand-red transition-colors">Favoritos</Link>
+          <Link href="/" className="hover:text-brand-gold transition-colors">Inicio</Link>
+          <Link href="/categoria/todas" className="hover:text-brand-gold transition-colors">Tienda</Link>
+          <Link href="/favoritos" className="hover:text-brand-gold transition-colors">Favoritos</Link>
         </nav>
 
         <div className="flex items-center gap-4">
@@ -60,7 +62,7 @@ export default function Navbar() {
           <Link href="/carrito" aria-label="Carrito" className="relative">
             <ShoppingBag size={22} />
             {itemCount > 0 && (
-              <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-brand-red text-[11px] font-bold text-white">
+              <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-brand-gold text-[11px] font-bold text-brand-black">
                 {itemCount}
               </span>
             )}
@@ -77,7 +79,7 @@ export default function Navbar() {
       {menuOpen && (
         <nav className="flex flex-col gap-1 border-t border-brand-gray-200 dark:border-brand-gray-700 px-4 py-3 text-sm font-semibold uppercase md:hidden">
           <Link href="/" onClick={() => setMenuOpen(false)} className="py-2">Inicio</Link>
-          <Link href="/categoria/todas" onClick={() => setMenuOpen(false)} className="py-2">Camisetas</Link>
+          <Link href="/categoria/todas" onClick={() => setMenuOpen(false)} className="py-2">Tienda</Link>
           <Link href="/favoritos" onClick={() => setMenuOpen(false)} className="py-2">Favoritos</Link>
         </nav>
       )}

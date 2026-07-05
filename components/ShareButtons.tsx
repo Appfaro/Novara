@@ -34,7 +34,7 @@ export default function ShareButtons({ title, url }: { title: string; url: strin
           target="_blank"
           rel="noopener noreferrer"
           aria-label={label}
-          className="rounded-full border border-brand-gray-300 p-2 hover:border-brand-red hover:text-brand-red dark:border-brand-gray-600"
+          className="rounded-full border border-brand-gray-300 p-2 hover:border-brand-gold hover:text-brand-gold dark:border-brand-gray-600"
         >
           <Icon size={16} />
         </a>

@@ -9,11 +9,7 @@ export default function RelatedProducts({
   all: Product[];
 }) {
   const related = all
-    .filter(
-      (p) =>
-        p.id !== current.id &&
-        (p.categoryId === current.categoryId || p.country === current.country)
-    )
+    .filter((p) => p.id !== current.id && p.categoryId === current.categoryId)
     .slice(0, 4);
 
   if (related.length === 0) return null;

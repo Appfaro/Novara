@@ -21,7 +21,7 @@ export default function ProductGrid({
   if (products.length === 0) {
     return (
       <p className="p-10 text-center text-brand-gray-500">
-        No se han encontrado camisetas con esos filtros.
+        No se han encontrado productos con esos filtros.
       </p>
     );
   }

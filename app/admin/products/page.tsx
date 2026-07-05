@@ -6,11 +6,13 @@ import { Plus, Pencil, Trash2 } from 'lucide-react';
 import AdminGuard from '@/components/admin/AdminGuard';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import { useProducts, deleteProduct } from '@/hooks/useProducts';
+import { useCategories } from '@/hooks/useCategories';
 import { formatPrice, totalStock } from '@/lib/utils';
 import toast from 'react-hot-toast';
 
 export default function AdminProductsPage() {
   const { products, loading } = useProducts();
+  const { categories } = useCategories();
 
   async function handleDelete(id: string, name: string) {
     if (!confirm(`¿Eliminar "${name}"? Esta acción no se puede deshacer.`)) return;
@@ -31,7 +33,7 @@ export default function AdminProductsPage() {
             <h1 className="font-display text-2xl uppercase">Productos</h1>
             <Link
               href="/admin/products/new"
-              className="flex items-center gap-2 bg-brand-red px-4 py-2 text-sm font-bold uppercase text-white hover:bg-brand-redDark"
+              className="flex items-center gap-2 bg-brand-gold px-4 py-2 text-sm font-bold uppercase text-brand-black hover:bg-brand-goldDark"
             >
               <Plus size={16} /> Nuevo producto
             </Link>
@@ -45,7 +47,7 @@ export default function AdminProductsPage() {
                 <tr className="border-b border-brand-gray-200 dark:border-brand-gray-700">
                   <th className="py-2">Imagen</th>
                   <th>Nombre</th>
-                  <th>País / Año</th>
+                  <th>Categoría</th>
                   <th>Precio</th>
                   <th>Stock</th>
                   <th>Visible</th>
@@ -61,7 +63,7 @@ export default function AdminProductsPage() {
                       )}
                     </td>
                     <td>{p.name}</td>
-                    <td>{p.country} · {p.worldCupYear}</td>
+                    <td>{categories.find((c) => c.id === p.categoryId)?.name || '—'}</td>
                     <td>{formatPrice(p.offerPrice || p.price)}</td>
                     <td>{totalStock(p)}</td>
                     <td>{p.visible ? 'Sí' : 'No'}</td>

@@ -5,6 +5,8 @@ import { usePathname, useRouter } from 'next/navigation';
 import { LayoutDashboard, Shirt, Tags, LogOut } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 
+import Logo from '@/components/Logo';
+
 const links = [
   { href: '/admin/dashboard', label: 'Resumen', icon: LayoutDashboard },
   { href: '/admin/products', label: 'Productos', icon: Shirt },
@@ -18,8 +20,9 @@ export default function AdminSidebar() {
 
   return (
     <aside className="flex h-full w-56 flex-col border-r border-brand-gray-200 bg-white p-4 dark:border-brand-gray-700 dark:bg-brand-dark">
-      <p className="mb-6 font-display text-lg uppercase">
-        Mundial<span className="text-brand-red">Shirts</span>
+      <p className="mb-6 flex items-center gap-2 font-display text-lg uppercase">
+        <Logo size={20} />
+        Novara
       </p>
       <nav className="flex-1 space-y-1">
         {links.map(({ href, label, icon: Icon }) => (

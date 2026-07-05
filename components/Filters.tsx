@@ -3,33 +3,35 @@
 export interface FilterState {
   minPrice: number;
   maxPrice: number;
-  country: string;
-  year: string;
   size: string;
   onlyAvailable: boolean;
+  attributes: Record<string, string>;
 }
 
 export const defaultFilters: FilterState = {
   minPrice: 0,
   maxPrice: 200,
-  country: '',
-  year: '',
   size: '',
   onlyAvailable: false,
+  attributes: {},
 };
 
 interface Props {
   filters: FilterState;
   onChange: (f: FilterState) => void;
-  countries: string[];
-  years: number[];
+  /** Nombres de atributos disponibles para filtrar en la categoría actual (ej. ["País", "Año"]) */
+  availableAttributes: string[];
 }
 
 const SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 
-export default function Filters({ filters, onChange, countries, years }: Props) {
+export default function Filters({ filters, onChange, availableAttributes }: Props) {
   function update<K extends keyof FilterState>(key: K, value: FilterState[K]) {
     onChange({ ...filters, [key]: value });
+  }
+
+  function updateAttribute(name: string, value: string) {
+    onChange({ ...filters, attributes: { ...filters.attributes, [name]: value } });
   }
 
   return (
@@ -55,33 +57,17 @@ export default function Filters({ filters, onChange, countries, years }: Props) 
         </div>
       </div>
 
-      <div>
-        <h3 className="mb-2 text-sm font-bold uppercase">País</h3>
-        <select
-          value={filters.country}
-          onChange={(e) => update('country', e.target.value)}
-          className="w-full border border-brand-gray-300 px-2 py-2 text-sm dark:bg-brand-black dark:border-brand-gray-600"
-        >
-          <option value="">Todos</option>
-          {countries.map((c) => (
-            <option key={c} value={c}>{c}</option>
-          ))}
-        </select>
-      </div>
-
-      <div>
-        <h3 className="mb-2 text-sm font-bold uppercase">Año del Mundial</h3>
-        <select
-          value={filters.year}
-          onChange={(e) => update('year', e.target.value)}
-          className="w-full border border-brand-gray-300 px-2 py-2 text-sm dark:bg-brand-black dark:border-brand-gray-600"
-        >
-          <option value="">Todos</option>
-          {years.map((y) => (
-            <option key={y} value={y}>{y}</option>
-          ))}
-        </select>
-      </div>
+      {availableAttributes.map((attr) => (
+        <div key={attr}>
+          <h3 className="mb-2 text-sm font-bold uppercase">{attr}</h3>
+          <input
+            value={filters.attributes[attr] || ''}
+            onChange={(e) => updateAttribute(attr, e.target.value)}
+            placeholder={`Filtrar por ${attr.toLowerCase()}`}
+            className="w-full border border-brand-gray-300 px-2 py-2 text-sm dark:bg-brand-black dark:border-brand-gray-600"
+          />
+        </div>
+      ))}
 
       <div>
         <h3 className="mb-2 text-sm font-bold uppercase">Talla</h3>
@@ -113,7 +99,7 @@ export default function Filters({ filters, onChange, countries, years }: Props) 
 
       <button
         onClick={() => onChange(defaultFilters)}
-        className="text-xs font-bold uppercase text-brand-red underline"
+        className="text-xs font-bold uppercase text-brand-gold underline"
       >
         Limpiar filtros
       </button>

@@ -8,7 +8,8 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Paleta estilo Nike/Adidas: negro, blanco, gris, rojo de acento
+        // Paleta Novara: negro, blanco, gris, dorado (acento principal) y un
+        // toque mínimo de rojo (el guion bajo la marca, como en el logotipo).
         brand: {
           black: '#0a0a0a',
           dark: '#151515',
@@ -22,6 +23,8 @@ module.exports = {
             600: '#3d3d3d',
             700: '#2a2a2a',
           },
+          gold: '#c9a24a',
+          goldDark: '#a3822f',
           red: '#e5121a',
           redDark: '#b80e14',
         },

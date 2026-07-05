@@ -13,7 +13,7 @@ export function StarsDisplay({ rating = 0, count = 0 }: { rating?: number; count
         <Star
           key={i}
           size={16}
-          className={i < Math.round(rating) ? 'fill-brand-red text-brand-red' : 'text-brand-gray-300'}
+          className={i < Math.round(rating) ? 'fill-brand-gold text-brand-gold' : 'text-brand-gray-300'}
         />
       ))}
       <span className="ml-1 text-xs text-brand-gray-500">({count})</span>
@@ -51,7 +51,7 @@ export default function RatingForm({
 
   return (
     <div>
-      <p className="mb-1 text-sm font-semibold">Valora esta camiseta</p>
+      <p className="mb-1 text-sm font-semibold">Valora este producto</p>
       <div className="flex gap-1">
         {Array.from({ length: 5 }).map((_, i) => (
           <button
@@ -64,7 +64,7 @@ export default function RatingForm({
           >
             <Star
               size={22}
-              className={(hover || 0) > i ? 'fill-brand-red text-brand-red' : 'text-brand-gray-300'}
+              className={(hover || 0) > i ? 'fill-brand-gold text-brand-gold' : 'text-brand-gray-300'}
             />
           </button>
         ))}

@@ -48,7 +48,7 @@ export default function Newsletter() {
         <button
           type="submit"
           disabled={sending}
-          className="bg-brand-red px-4 text-sm font-bold uppercase text-white hover:bg-brand-redDark disabled:opacity-60"
+          className="bg-brand-gold px-4 text-sm font-bold uppercase text-brand-black hover:bg-brand-goldDark disabled:opacity-60"
         >
           OK
         </button>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Product, ProductImage, SizeStock } from '@/types';
 import { createProduct, updateProduct } from '@/hooks/useProducts';
@@ -16,35 +16,57 @@ export default function ProductForm({ existing }: { existing?: Product }) {
   const { categories } = useCategories();
 
   const [name, setName] = useState(existing?.name || '');
-  const [country, setCountry] = useState(existing?.country || '');
-  const [year, setYear] = useState(existing?.worldCupYear || 2026);
   const [price, setPrice] = useState(existing?.price || 0);
   const [offerPrice, setOfferPrice] = useState(existing?.offerPrice || 0);
   const [description, setDescription] = useState(existing?.description || '');
-  const [categoryId, setCategoryId] = useState(existing?.categoryId || categories[0]?.id || '');
+  const [categoryId, setCategoryId] = useState(existing?.categoryId || '');
   const [visible, setVisible] = useState(existing?.visible ?? true);
   const [images, setImages] = useState<ProductImage[]>(existing?.images || []);
   const [sizes, setSizes] = useState<SizeStock[]>(
     existing?.sizes || ALL_SIZES.map((size) => ({ size, stock: 0 }))
   );
-  const [sku] = useState(existing?.sku || generateSku(country || 'GEN', year));
+  const [attributes, setAttributes] = useState<Record<string, string>>(existing?.attributes || {});
+  const [sku, setSku] = useState(existing?.sku || '');
   const [saving, setSaving] = useState(false);
+
+  const selectedCategory = categories.find((c) => c.id === categoryId);
+
+  // Selecciona la primera categoría disponible por defecto al crear un producto nuevo
+  useEffect(() => {
+    if (!existing && !categoryId && categories.length > 0) {
+      setCategoryId(categories[0].id);
+    }
+  }, [categories, existing, categoryId]);
+
+  // Genera el SKU automáticamente en cuanto se conoce la categoría (solo al crear)
+  useEffect(() => {
+    if (!existing && !sku && selectedCategory) {
+      setSku(generateSku(selectedCategory.name));
+    }
+  }, [existing, sku, selectedCategory]);
 
   function updateStock(size: SizeStock['size'], stock: number) {
     setSizes((prev) => prev.map((s) => (s.size === size ? { ...s, stock: Math.max(0, stock) } : s)));
   }
 
+  function updateAttribute(key: string, value: string) {
+    setAttributes((prev) => ({ ...prev, [key]: value }));
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!name || !country || !categoryId) {
-      toast.error('Completa nombre, país y categoría');
+    if (!name || !categoryId) {
+      toast.error('Completa al menos el nombre y la categoría');
       return;
     }
     setSaving(true);
+    // Solo se guardan los atributos que pertenecen a la categoría actual
+    const cleanAttributes: Record<string, string> = {};
+    (selectedCategory?.attributes || []).forEach((attr) => {
+      if (attributes[attr]) cleanAttributes[attr] = attributes[attr];
+    });
     const data = {
       name,
-      country,
-      worldCupYear: Number(year),
       price: Number(price),
       offerPrice: offerPrice ? Number(offerPrice) : null,
       description,
@@ -52,6 +74,7 @@ export default function ProductForm({ existing }: { existing?: Product }) {
       sizes,
       sku,
       categoryId,
+      attributes: cleanAttributes,
       visible,
     };
     try {
@@ -83,25 +106,6 @@ export default function ProductForm({ existing }: { existing?: Product }) {
           />
         </div>
         <div>
-          <label className="mb-1 block text-sm font-semibold">País</label>
-          <input
-            value={country}
-            onChange={(e) => setCountry(e.target.value)}
-            className="w-full border border-brand-gray-300 px-3 py-2 dark:bg-brand-black dark:border-brand-gray-600"
-            required
-          />
-        </div>
-        <div>
-          <label className="mb-1 block text-sm font-semibold">Año del Mundial</label>
-          <input
-            type="number"
-            value={year}
-            onChange={(e) => setYear(Number(e.target.value))}
-            className="w-full border border-brand-gray-300 px-3 py-2 dark:bg-brand-black dark:border-brand-gray-600"
-            required
-          />
-        </div>
-        <div>
           <label className="mb-1 block text-sm font-semibold">Categoría</label>
           <select
             value={categoryId}
@@ -114,6 +118,11 @@ export default function ProductForm({ existing }: { existing?: Product }) {
               <option key={c.id} value={c.id}>{c.name}</option>
             ))}
           </select>
+          {categories.length === 0 && (
+            <p className="mt-1 text-xs text-brand-gray-500">
+              Primero crea una categoría en la sección &quot;Categorías&quot;.
+            </p>
+          )}
         </div>
         <div>
           <label className="mb-1 block text-sm font-semibold">Precio (€)</label>
@@ -137,6 +146,27 @@ export default function ProductForm({ existing }: { existing?: Product }) {
           />
         </div>
       </div>
+
+      {/* Campos personalizados según la categoría elegida (definidos en "Categorías") */}
+      {selectedCategory && selectedCategory.attributes.length > 0 && (
+        <div>
+          <label className="mb-2 block text-sm font-semibold">
+            Datos de &quot;{selectedCategory.name}&quot;
+          </label>
+          <div className="grid grid-cols-2 gap-4">
+            {selectedCategory.attributes.map((attr) => (
+              <div key={attr}>
+                <label className="mb-1 block text-xs font-semibold text-brand-gray-500">{attr}</label>
+                <input
+                  value={attributes[attr] || ''}
+                  onChange={(e) => updateAttribute(attr, e.target.value)}
+                  className="w-full border border-brand-gray-300 px-3 py-2 dark:bg-brand-black dark:border-brand-gray-600"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div>
         <label className="mb-1 block text-sm font-semibold">Descripción</label>
@@ -164,11 +194,15 @@ export default function ProductForm({ existing }: { existing?: Product }) {
             </div>
           ))}
         </div>
+        <p className="mt-1 text-xs text-brand-gray-500">
+          Si tu producto no usa tallas de ropa, deja todas a 0 salvo una (ej. &quot;M&quot;) y
+          pon ahí el stock total disponible.
+        </p>
       </div>
 
       <div>
         <label className="mb-2 block text-sm font-semibold">Imágenes</label>
-        <ImageUploader sku={sku} images={images} onChange={setImages} />
+        <ImageUploader sku={sku || 'nuevo'} images={images} onChange={setImages} />
       </div>
 
       <div className="flex items-center justify-between border-t border-brand-gray-200 pt-4 dark:border-brand-gray-700">
@@ -182,7 +216,7 @@ export default function ProductForm({ existing }: { existing?: Product }) {
       <button
         type="submit"
         disabled={saving}
-        className="bg-brand-red px-6 py-3 text-sm font-bold uppercase tracking-widest2 text-white hover:bg-brand-redDark disabled:opacity-60"
+        className="bg-brand-gold px-6 py-3 text-sm font-bold uppercase tracking-widest2 text-brand-black hover:bg-brand-goldDark disabled:opacity-60"
       >
         {saving ? 'Guardando…' : existing ? 'Guardar cambios' : 'Crear producto'}
       </button>

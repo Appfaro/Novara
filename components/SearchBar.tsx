@@ -13,12 +13,10 @@ export default function SearchBar({ onSelect }: { onSelect?: () => void }) {
     if (!term.trim()) return [];
     const t = term.toLowerCase();
     return products
-      .filter(
-        (p) =>
-          p.name.toLowerCase().includes(t) ||
-          p.country.toLowerCase().includes(t) ||
-          String(p.worldCupYear).includes(t)
-      )
+      .filter((p) => {
+        if (p.name.toLowerCase().includes(t)) return true;
+        return Object.values(p.attributes || {}).some((v) => v.toLowerCase().includes(t));
+      })
       .slice(0, 6);
   }, [term, products]);
 
@@ -28,7 +26,7 @@ export default function SearchBar({ onSelect }: { onSelect?: () => void }) {
         autoFocus
         value={term}
         onChange={(e) => setTerm(e.target.value)}
-        placeholder="Busca por país, año o nombre (ej. Brasil 2002)"
+        placeholder="Busca por nombre o características (ej. Brasil, algodón...)"
         className="w-full border border-brand-gray-300 bg-white px-4 py-3 text-sm outline-none dark:bg-brand-black dark:border-brand-gray-600"
       />
       {results.length > 0 && (
@@ -45,7 +43,11 @@ export default function SearchBar({ onSelect }: { onSelect?: () => void }) {
               )}
               <div>
                 <p className="text-sm font-semibold">{p.name}</p>
-                <p className="text-xs text-brand-gray-500">{p.country} · {p.worldCupYear}</p>
+                {Object.values(p.attributes || {}).length > 0 && (
+                  <p className="text-xs text-brand-gray-500">
+                    {Object.values(p.attributes || {}).slice(0, 2).join(' · ')}
+                  </p>
+                )}
               </div>
             </Link>
           ))}

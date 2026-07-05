@@ -16,8 +16,9 @@ export async function generateMetadata({
     if (!snap.exists()) return { title: 'Producto no encontrado' };
     const product = snap.data() as Product;
     const image = product.images?.[0]?.url;
+    const attrs = Object.values(product.attributes || {}).filter(Boolean).slice(0, 2).join(' ');
     return {
-      title: `${product.name} | ${product.country} ${product.worldCupYear}`,
+      title: attrs ? `${product.name} | ${attrs}` : product.name,
       description: product.description?.slice(0, 160),
       openGraph: {
         title: product.name,
@@ -26,7 +27,7 @@ export async function generateMetadata({
       },
     };
   } catch {
-    return { title: 'MundialShirts' };
+    return { title: 'Novara' };
   }
 }
 

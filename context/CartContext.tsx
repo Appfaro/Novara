@@ -25,8 +25,8 @@ interface CartContextValue {
 }
 
 const CartContext = createContext<CartContextValue | undefined>(undefined);
-const STORAGE_KEY = 'mundial-shirts-cart';
-const COUPON_KEY = 'mundial-shirts-coupon';
+const STORAGE_KEY = 'novara-cart';
+const COUPON_KEY = 'novara-coupon';
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
