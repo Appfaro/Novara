@@ -53,6 +53,20 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es" className={`${anton.variable} ${inter.variable}`}>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try {
+              if (!window.location.pathname.startsWith('/admin')) {
+                var t = localStorage.getItem('theme');
+                if (t ? t === 'dark' : true) {
+                  document.documentElement.classList.add('dark');
+                }
+              }
+            } catch (e) {}`,
+          }}
+        />
+      </head>
       <body className="font-body antialiased">
         <AuthProvider>
           <CartProvider>
