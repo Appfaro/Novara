@@ -11,11 +11,11 @@ export default function Navbar() {
   const { itemCount } = useCart();
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
-  const [dark, setDark] = useState(false);
+  const [dark, setDark] = useState(true);
 
   useEffect(() => {
     const stored = localStorage.getItem('theme');
-    const isDark = stored === 'dark';
+    const isDark = stored ? stored === 'dark' : true;
     setDark(isDark);
     document.documentElement.classList.toggle('dark', isDark);
   }, []);
@@ -28,7 +28,7 @@ export default function Navbar() {
   }
 
   return (
-    <header className="sticky top-0 z-50 border-b border-brand-gray-200 dark:border-brand-gray-700 bg-white/95 dark:bg-brand-black/95 backdrop-blur">
+    <header className="sticky top-0 z-50 border-b border-brand-gray-200 bg-white/95 text-brand-black backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
         <button
           className="md:hidden"
@@ -71,13 +71,13 @@ export default function Navbar() {
       </div>
 
       {searchOpen && (
-        <div className="border-t border-brand-gray-200 dark:border-brand-gray-700 px-4 py-3 sm:px-6">
+        <div className="border-t border-brand-gray-200 px-4 py-3 sm:px-6">
           <SearchBar onSelect={() => setSearchOpen(false)} />
         </div>
       )}
 
       {menuOpen && (
-        <nav className="flex flex-col gap-1 border-t border-brand-gray-200 dark:border-brand-gray-700 px-4 py-3 text-sm font-semibold uppercase md:hidden">
+        <nav className="flex flex-col gap-1 border-t border-brand-gray-200 px-4 py-3 text-sm font-semibold uppercase md:hidden">
           <Link href="/" onClick={() => setMenuOpen(false)} className="py-2">Inicio</Link>
           <Link href="/categoria/todas" onClick={() => setMenuOpen(false)} className="py-2">Tienda</Link>
           <Link href="/favoritos" onClick={() => setMenuOpen(false)} className="py-2">Favoritos</Link>
