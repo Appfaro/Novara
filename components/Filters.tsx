@@ -35,7 +35,7 @@ export default function Filters({ filters, onChange, availableAttributes }: Prop
   }
 
   return (
-    <aside className="w-full space-y-6 border-brand-gray-200 p-4 dark:border-brand-gray-700 sm:w-64 sm:border-r">
+    <aside className="w-full space-y-5 border-brand-gray-200 p-3 dark:border-brand-gray-700 sm:w-48 sm:border-r">
       <div>
         <h3 className="mb-2 text-sm font-bold uppercase">Precio</h3>
         <div className="flex items-center gap-2 text-sm">
