@@ -9,7 +9,7 @@ export default function Banner() {
       <div className="relative mx-auto flex max-w-5xl items-center justify-between gap-10 px-6 py-24 sm:py-32">
         <div className="flex max-w-xl flex-col items-start gap-5">
           <div className="flex items-center gap-1">
-            <Logo size={72} light />
+            <Logo size={80} light />
             <h1 className="font-display text-5xl uppercase leading-[0.95] sm:text-6xl animate-fadeUp">
               Novara
             </h1>
@@ -31,7 +31,7 @@ export default function Banner() {
         </div>
 
         <div className="pointer-events-none hidden flex-shrink-0 opacity-90 md:block">
-          <Logo size={300} light />
+          <Logo size={400} light />
         </div>
       </div>
     </section>
