@@ -1,15 +1,25 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import Logo from '@/components/Logo';
 
 export default function Banner() {
   return (
     <section className="relative overflow-hidden bg-brand-black text-white">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(201,162,74,0.25),transparent_45%)]" />
+      <div className="absolute inset-y-0 right-0 hidden w-[55%] md:block">
+        <Image
+          src="/images/hero-runner.png"
+          alt=""
+          fill
+          priority
+          className="object-cover object-left"
+        />
+        <div className="absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-brand-black to-transparent" />
+      </div>
 
-      <div className="relative mx-auto flex max-w-5xl items-center justify-between gap-10 px-6 py-24 sm:py-32">
+      <div className="relative mx-auto flex max-w-6xl items-center px-6 py-20 sm:py-28">
         <div className="flex max-w-xl flex-col items-start gap-5">
           <div className="flex items-center gap-1">
-            <Logo size={100} light />
+            <Logo size={72} light />
             <h1 className="font-display text-5xl uppercase leading-[0.95] sm:text-6xl animate-fadeUp">
               Novara
             </h1>
@@ -28,10 +38,6 @@ export default function Banner() {
           >
             Comprar ahora
           </Link>
-        </div>
-
-        <div className="pointer-events-none hidden flex-shrink-0 opacity-90 md:block">
-          <Logo size={400} light />
         </div>
       </div>
     </section>
