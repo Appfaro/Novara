@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Product, ProductImage, SizeStock } from '@/types';
-import { createProduct, updateProduct } from '@/hooks/useProducts';
+import { createProduct, updateProduct, useProducts } from '@/hooks/useProducts';
 import { useCategories } from '@/hooks/useCategories';
 import { generateSku } from '@/lib/utils';
 import ImageUploader from '@/components/admin/ImageUploader';
@@ -14,6 +14,7 @@ const ALL_SIZES: SizeStock['size'][] = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 export default function ProductForm({ existing }: { existing?: Product }) {
   const router = useRouter();
   const { categories } = useCategories();
+  const { products } = useProducts();
 
   const [name, setName] = useState(existing?.name || '');
   const [price, setPrice] = useState(existing?.price || 0);
@@ -31,14 +32,12 @@ export default function ProductForm({ existing }: { existing?: Product }) {
 
   const selectedCategory = categories.find((c) => c.id === categoryId);
 
-  // Selecciona la primera categoría disponible por defecto al crear un producto nuevo
   useEffect(() => {
     if (!existing && !categoryId && categories.length > 0) {
       setCategoryId(categories[0].id);
     }
   }, [categories, existing, categoryId]);
 
-  // Genera el SKU automáticamente en cuanto se conoce la categoría (solo al crear)
   useEffect(() => {
     if (!existing && !sku && selectedCategory) {
       setSku(generateSku(selectedCategory.name));
@@ -60,7 +59,6 @@ export default function ProductForm({ existing }: { existing?: Product }) {
       return;
     }
     setSaving(true);
-    // Solo se guardan los atributos que pertenecen a la categoría actual
     const cleanAttributes: Record<string, string> = {};
     (selectedCategory?.attributes || []).forEach((attr) => {
       if (attributes[attr]) cleanAttributes[attr] = attributes[attr];
@@ -82,7 +80,7 @@ export default function ProductForm({ existing }: { existing?: Product }) {
         await updateProduct(existing.id, data);
         toast.success('Producto actualizado');
       } else {
-        await createProduct(data);
+        await createProduct(data, products.length);
         toast.success('Producto creado');
       }
       router.push('/admin/products');
@@ -147,7 +145,6 @@ export default function ProductForm({ existing }: { existing?: Product }) {
         </div>
       </div>
 
-      {/* Campos personalizados según la categoría elegida (definidos en "Categorías") */}
       {selectedCategory && selectedCategory.attributes.length > 0 && (
         <div>
           <label className="mb-2 block text-sm font-semibold">
